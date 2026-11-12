@@ -1,0 +1,1404 @@
+<!-- ============================================
+     Developer: SULkod20133
+     Project: NEON CASES
+     ============================================ -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="developer" content="SULkod20133" />
+<meta name="author" content="SULkod20133" />
+<title>NEON CASES</title>
+<style>
+  :root{
+    --bg:#07080f; --bg2:#0d1120; --panel:rgba(20,26,42,.78);
+    --panel-brd:rgba(120,160,255,.20); --txt:#eaf0ff; --muted:#8b97b8;
+    --accent:#7b5cff; --accent2:#00e5ff; --gold:#ffc43d; --red:#ff4d6d; --green:#2ee6a8;
+    --radius:18px; --blur:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow-x:hidden}
+  body{font-family:'Segoe UI',Inter,system-ui,sans-serif;color:var(--txt);
+    background:radial-gradient(1200px 600px at 10% -10%,rgba(123,92,255,.30),transparent 60%),
+      radial-gradient(900px 500px at 110% 10%,rgba(0,229,255,.22),transparent 60%),
+      linear-gradient(180deg,var(--bg),var(--bg2));min-height:100vh}
+  #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #flash{position:fixed;inset:0;z-index:150;pointer-events:none;opacity:0;
+    background:radial-gradient(circle at 50% 50%,rgba(255,196,61,.9),transparent 60%);transition:opacity .5s}
+  #flash.on{opacity:1}
+
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;
+    padding:14px 28px;background:rgba(7,8,15,.78);backdrop-filter:blur(var(--blur));
+    border-bottom:1px solid var(--panel-brd);flex-wrap:wrap}
+  .logo{font-weight:900;font-size:22px;letter-spacing:2px;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 30px rgba(0,229,255,.4)}
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  nav button{background:transparent;border:1px solid transparent;color:var(--muted);
+    padding:9px 16px;border-radius:12px;cursor:pointer;font-size:14px;font-weight:700;transition:.18s}
+  nav button:hover{color:var(--txt);background:rgba(120,160,255,.08)}
+  nav button.active{color:var(--txt);background:rgba(123,92,255,.20);border-color:rgba(123,92,255,.45)}
+  .spacer{flex:1}
+  .balance{display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(123,92,255,.28),rgba(0,229,255,.16));
+    border:1px solid var(--panel-brd);font-weight:800}
+  .coin{width:20px;height:20px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%,#fff5c2,var(--gold));
+    box-shadow:0 0 14px var(--gold);animation:pulseCoin 2s ease-in-out infinite}
+  @keyframes pulseCoin{50%{transform:scale(1.15)}}
+  .user{display:flex;align-items:center;gap:10px}
+  .avatar{width:36px;height:36px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 0 20px rgba(123,92,255,.6)}
+  .dev-badge{
+    padding:8px 14px;border-radius:12px;font-size:12px;font-weight:800;letter-spacing:.5px;
+    color:var(--accent2);background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.3);
+    text-shadow:0 0 12px rgba(0,229,255,.5);user-select:none;
+  }
+
+  main{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:28px}
+  section{display:none;animation:fadeUp .35s ease}
+  section.active{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  h2{margin:0 0 18px;font-size:26px}
+  .muted{color:var(--muted);font-size:14px}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .filters button{padding:8px 16px;border-radius:999px;border:1px solid var(--panel-brd);
+    background:var(--panel);color:var(--muted);cursor:pointer;font-weight:700;font-size:13px;transition:.18s}
+  .filters button:hover{color:var(--txt)}
+  .filters button.active{color:#fff;border-color:transparent;
+    background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+  .card{position:relative;padding:18px;border-radius:var(--radius);cursor:pointer;
+    background:var(--panel);border:1px solid var(--panel-brd);backdrop-filter:blur(var(--blur));
+    transition:transform .22s,box-shadow .22s,border-color .22s;overflow:hidden;z-index:1}
+  .card:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(0,0,0,.5),0 0 30px rgba(123,92,255,.35);
+    border-color:rgba(123,92,255,.55)}
+  .card .thumb{height:150px;border-radius:14px;margin-bottom:14px;overflow:hidden;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 40%,rgba(123,92,255,.25),transparent 70%)}
+  .card .thumb img{width:100%;height:100%;object-fit:contain;
+    filter:drop-shadow(0 0 18px rgba(0,229,255,.5));pointer-events:none}
+  .card h3{margin:0 0 8px;font-size:17px}
+  .price{display:flex;align-items:center;gap:6px;color:var(--gold);font-weight:800;font-size:15px}
+
+  .drops{display:flex;gap:10px;overflow:hidden;padding:14px;border-radius:var(--radius);
+    background:var(--panel);border:1px solid var(--panel-brd);margin-bottom:24px;backdrop-filter:blur(var(--blur))}
+  .drop{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;
+    background:rgba(120,160,255,.08);white-space:nowrap;font-size:13px;animation:fadeUp .4s}
+  .drop .dot{width:8px;height:8px;border-radius:50%}
+
+  .roulette-wrap{position:relative;overflow:hidden;border-radius:var(--radius);
+    background:var(--panel);border:1px solid var(--panel-brd);padding:18px;margin-bottom:22px;min-height:150px}
+  .roulette{display:flex;gap:12px;will-change:transform}
+  .r-item{min-width:120px;height:110px;border-radius:14px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:6px;
+    background:rgba(120,160,255,.07);border:1px solid var(--panel-brd);font-size:34px;flex:0 0 auto}
+  .r-item img{width:56px;height:56px;object-fit:contain}
+  .r-item small{font-size:11px;color:var(--muted)}
+  .marker{position:absolute;left:50%;top:8px;bottom:8px;width:3px;transform:translateX(-50%);
+    background:linear-gradient(var(--accent2),var(--accent));box-shadow:0 0 20px var(--accent2);
+    border-radius:2px;z-index:2;pointer-events:none}
+
+  .wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin:22px 0}
+  .wheel{
+    position:relative;width:300px;height:300px;border-radius:50%;
+    background:
+      conic-gradient(
+        from 0deg,
+        var(--green) 0deg,
+        var(--green) var(--success-deg, 90deg),
+        var(--red) var(--success-deg, 90deg),
+        var(--red) 360deg
+      );
+    box-shadow:0 0 50px rgba(123,92,255,.35), inset 0 0 40px rgba(0,0,0,.6);
+  }
+  .wheel::before{
+    content:"";position:absolute;inset:22px;border-radius:50%;
+    background:radial-gradient(circle at 50% 40%, #131a2e, #0a0e1a);
+    box-shadow:inset 0 0 30px rgba(0,0,0,.8);
+  }
+  .wheel-center{
+    position:absolute;inset:22px;border-radius:50%;
+    display:flex;align-items:flex-start;justify-content:center;
+    pointer-events:none;
+  }
+  .wheel-needle{
+    width:4px;height:50%;transform-origin:50% 100%;
+    background:linear-gradient(180deg, var(--accent2), var(--accent));
+    border-radius:2px;box-shadow:0 0 18px var(--accent2);
+    position:relative;transform:rotate(0deg);will-change:transform;
+  }
+  .wheel-needle::before{
+    content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+    border:9px solid transparent;border-bottom-color:var(--accent2);
+    filter:drop-shadow(0 0 6px var(--accent2));
+  }
+  .wheel-hub{
+    position:absolute;left:50%;top:50%;width:28px;height:28px;border-radius:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 30% 30%, #eaf0ff, #7b5cff);
+    box-shadow:0 0 24px var(--accent);
+  }
+  .wheel-legend{display:flex;gap:20px;font-size:13px;color:var(--muted)}
+  .wheel-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+
+  .up-status{font-weight:800;font-size:15px;min-height:22px;margin-bottom:6px;text-align:center}
+
+  .btn{padding:12px 26px;border-radius:14px;border:none;cursor:pointer;font-weight:800;font-size:15px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;
+    box-shadow:0 10px 30px rgba(123,92,255,.4);transition:.2s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(123,92,255,.55)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .btn.ghost{background:transparent;border:1px solid var(--panel-brd);box-shadow:none;color:var(--txt)}
+
+  .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .inv-item{padding:14px;border-radius:14px;text-align:center;
+    background:var(--panel);border:1px solid var(--panel-brd);position:relative;transition:.2s}
+  .inv-item:hover{transform:translateY(-4px)}
+  .inv-item img{width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 10px rgba(0,229,255,.45))}
+  .inv-item small{display:block;font-size:12px;margin-top:4px}
+
+  .profile-card{display:flex;gap:24px;align-items:center;padding:28px;border-radius:var(--radius);
+    background:var(--panel);border:1px solid var(--panel-brd);backdrop-filter:blur(var(--blur))}
+  .profile-card .avatar{width:90px;height:90px;border-radius:24px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  .stat{padding:18px;border-radius:14px;background:var(--panel);border:1px solid var(--panel-brd);text-align:center}
+  .stat b{display:block;font-size:24px;color:var(--accent2)}
+  .stat span{font-size:12px;color:var(--muted)}
+
+  #toasts{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:10px;z-index:999}
+  .toast{padding:14px 20px;border-radius:12px;background:var(--panel);border:1px solid var(--panel-brd);
+    backdrop-filter:blur(var(--blur));animation:fadeUp .3s;font-size:14px;max-width:320px}
+  .toast.gold{border-color:var(--gold);box-shadow:0 0 28px rgba(255,196,61,.5)}
+  .toast.dev{border-color:var(--accent2);box-shadow:0 0 28px rgba(0,229,255,.5);color:var(--accent2)}
+  .toast.fig{border-color:#ff5ef0;box-shadow:0 0 28px rgba(255,94,240,.5);color:#ff5ef0}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
+  .modal-bg.show{display:flex}
+  .modal{width:min(620px,96vw);padding:26px;border-radius:24px;background:var(--bg2);
+    border:1px solid var(--panel-brd);box-shadow:0 30px 90px rgba(0,0,0,.7);text-align:center}
+  .modal .big img{width:140px;height:140px;object-fit:contain;
+    filter:drop-shadow(0 0 30px currentColor);animation:pop .5s}
+  @keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+  .modal h3{margin:8px 0 4px;font-size:24px}
+  .rarity-common{color:#9aa7c7}.rarity-rare{color:#4da6ff}
+  .rarity-epic{color:#b06cff}.rarity-legendary{color:var(--gold);text-shadow:0 0 22px rgba(255,196,61,.7)}
+  .rarity-fig1{color:#5ef0ff}.rarity-fig2{color:#7bffb5}
+  .rarity-fig3{color:#ff5ef0}.rarity-fig4{color:#ff9a3d}
+  .rarity-fig5{color:#ff2e63;text-shadow:0 0 18px rgba(255,46,99,.8)}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:210}
+
+  .filters-inline{
+    padding:6px 12px;border-radius:999px;border:1px solid var(--panel-brd);
+    background:var(--panel);color:var(--muted);cursor:pointer;font-weight:700;font-size:12px;
+  }
+  .filters-inline:hover{color:var(--txt)}
+  .filters-inline.active{color:#fff;border-color:transparent;
+    background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .content-item{
+    display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:12px;
+    background:rgba(120,160,255,.06);border:1px solid var(--panel-brd);margin-bottom:8px;
+  }
+  .content-item img{width:42px;height:42px;object-fit:contain;flex:0 0 auto}
+  .content-item .ci-name{flex:1;font-weight:700;font-size:14px;text-align:left}
+  .content-item .ci-chance{font-weight:800;min-width:110px;text-align:right;font-size:13px}
+  .content-item .ci-price{font-weight:800;min-width:110px;text-align:right;font-size:13px;color:var(--gold)}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div id="flash"></div>
+<canvas id="confetti"></canvas>
+
+<header>
+  <div class="logo">NEON CASES</div>
+  <nav>
+    <button class="active" data-tab="cases">Кейсы</button>
+    <button data-tab="inventory">Инвентарь</button>
+    <button data-tab="profile">Профиль</button>
+    <button data-tab="upgrade">Апгрейд</button>
+    <button data-tab="developer">Developer</button>
+  </nav>
+  <div class="spacer"></div>
+  <div class="balance"><div class="coin"></div><span id="balance">0</span></div>
+  <div class="user"><div class="avatar"></div><span>Player</span></div>
+  <div class="dev-badge" title="Разработчик">by SULkod20133</div>
+</header>
+
+<main>
+  <section id="cases" class="active">
+    <div class="drops" id="dropFeed"></div>
+    <div class="filters" id="filters">
+      <button class="active" data-f="all">Все</button>
+      <button data-f="budget">Бюджет</button>
+      <button data-f="mid">Средние</button>
+      <button data-f="premium">Премиум</button>
+    </div>
+    <h2>Кейсы</h2>
+    <div class="grid" id="caseGrid"></div>
+  </section>
+
+  <section id="inventory">
+    <h2>Инвентарь</h2>
+    <p class="muted" id="invEmpty">Пока пусто — открой кейс.</p>
+    <div class="inv-grid" id="invGrid"></div>
+  </section>
+
+  <section id="profile">
+    <h2>Профиль</h2>
+    <div class="profile-card">
+      <div class="avatar"></div>
+      <div>
+        <div style="font-size:22px;font-weight:800">Player</div>
+        <div class="muted">Уровень <b id="pLevel">1</b> · Опыт <b id="pXp">0</b></div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" id="bonusBtn">Ежедневный бонус</button>
+      <button class="btn ghost" id="resetBtn" style="margin-left:10px">Сброс прогресса</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sOpened">0</b><span>Кейсов открыто</span></div>
+      <div class="stat"><b id="sBest">—</b><span>Лучший дроп</span></div>
+      <div class="stat"><b id="sSpent">0</b><span>Потрачено</span></div>
+    </div>
+  </section>
+
+  <section id="upgrade">
+    <h2>Апгрейд предметов</h2>
+    <p class="muted">Выбери предмет, затем шанс. Стрелка вращается по кругу и плавно замедляется. Зелёный сектор — успех.</p>
+    <div class="inv-grid" id="upgradeGrid"></div>
+
+    <div class="up-status" id="upStatus"></div>
+    <div id="upSelectedInfo" class="muted" style="text-align:center;margin-bottom:6px;min-height:18px"></div>
+
+    <div class="wheel-wrap">
+      <div class="wheel" id="wheel" style="--success-deg:90deg">
+        <div class="wheel-center">
+          <div class="wheel-needle" id="wheelNeedle"></div>
+        </div>
+        <div class="wheel-hub"></div>
+      </div>
+      <div class="wheel-legend">
+        <span><i style="background:var(--green)"></i> Успех</span>
+        <span><i style="background:var(--red)"></i> Провал</span>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px">
+      <button class="btn" data-up="25">Апгрейд 25%</button>
+      <button class="btn" data-up="50">Апгрейд 50%</button>
+      <button class="btn ghost" data-up="75">Апгрейд 75%</button>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;align-items:center">
+      <label for="customChance" class="muted">Свой шанс, %:</label>
+      <input id="customChance" type="number" min="1" max="99" step="1" value="10"
+             style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--panel-brd);background:var(--panel);color:var(--txt)" />
+      <button class="btn" id="customUpBtn">Апгрейд на указанный %</button>
+    </div>
+  </section>
+
+  <section id="developer">
+    <h2>Developer</h2>
+    <div>
+      <input id="devCodeInput" type="text" placeholder="ENTER DEVELOPER CODE" autocomplete="off" spellcheck="false" />
+      <button id="devApplyBtn" type="button">Apply</button>
+      <button id="devOffBtn" type="button">Turn off</button>
+      <div id="devStatus" style="margin-top:10px"></div>
+    </div>
+  </section>
+</main>
+
+<footer style="position:relative;z-index:1;text-align:center;padding:28px;color:var(--muted);font-size:13px">
+  NEON CASES · developer <b style="color:var(--accent2)">SULkod20133</b>
+</footer>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3 id="mTitle">Открываем кейс...</h3>
+    <div class="roulette-wrap">
+      <div class="marker"></div>
+      <div class="roulette" id="roulette"></div>
+    </div>
+    <div id="mResult" style="display:none">
+      <div class="big" id="mEmoji"></div>
+      <h3 id="mItemName">Предмет</h3>
+      <div id="mRarity" class="muted">—</div>
+      <div id="mPrice" style="margin-top:6px;font-weight:800;color:var(--gold)">—</div>
+      <button class="btn" style="margin-top:18px" id="mClose">Забрать</button>
+    </div>
+    <button class="btn ghost" id="mCancel" style="margin-top:14px">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="qtyModalBg">
+  <div class="modal">
+    <h3 id="qtyTitle">Сколько кейсов открыть?</h3>
+    <p class="muted" id="qtyInfo"></p>
+    <div style="display:flex;gap:10px;justify-content:center;align-items:center;margin:14px 0">
+      <input id="qtyInput" type="number" min="1" step="1" value="1"
+             style="width:100px;padding:10px;border-radius:10px;border:1px solid var(--panel-brd);background:var(--panel);color:var(--txt);text-align:center" />
+      <span class="muted">из <b id="qtyMax">1</b></span>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" id="qtyConfirm">Открыть</button>
+      <button class="btn ghost" id="qtyCancel">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="contentModalBg">
+  <div class="modal" style="width:min(760px,96vw);text-align:left">
+    <h3 id="contentTitle" style="text-align:center">Содержимое кейса</h3>
+    <p class="muted" id="contentSub" style="text-align:center"></p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0">
+      <button class="filters-inline active" data-cf="all">Все</button>
+      <button class="filters-inline" data-cf="color">Цвета</button>
+      <button class="filters-inline" data-cf="fig1">Фиг.1</button>
+      <button class="filters-inline" data-cf="fig2">Фиг.2</button>
+      <button class="filters-inline" data-cf="fig3">Фиг.3</button>
+      <button class="filters-inline" data-cf="fig4">Фиг.4</button>
+      <button class="filters-inline" data-cf="fig5">Фиг.5</button>
+    </div>
+
+    <div id="contentList" style="max-height:60vh;overflow-y:auto;padding-right:6px"></div>
+
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+      <button class="btn" id="contentOpenBtn">Открыть кейс</button>
+      <button class="btn ghost" id="contentCloseBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+/* ================= DEVELOPER ================= */
+const DEVELOPER = 'SULkod20133';
+console.info('%cNEON CASES%c by ' + DEVELOPER,
+  'color:#00e5ff;font-weight:900;font-size:14px',
+  'color:#7b5cff;font-weight:700');
+
+/* ================= SVG В BASE64 ================= */
+function b64svg(svgStr){
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgStr)));
+}
+function svgCase(hue1, hue2, glow){
+  return b64svg(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+    <defs><radialGradient id='g' cx='50%' cy='40%' r='70%'>
+      <stop offset='0%' stop-color='hsl(${hue1},100%,70%)'/>
+      <stop offset='100%' stop-color='hsl(${hue2},90%,35%)'/></radialGradient>
+      <filter id='f'><feGaussianBlur stdDeviation='4' result='b'/>
+        <feMerge><feMergeNode in='b'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs>
+    <rect x='30' y='50' width='140' height='120' rx='16' fill='url(#g)' filter='url(#f)' opacity='.9'/>
+    <rect x='30' y='50' width='140' height='30' rx='12' fill='rgba(255,255,255,.25)'/>
+    <rect x='88' y='50' width='24' height='120' fill='rgba(255,255,255,.35)'/>
+    <circle cx='100' cy='110' r='18' fill='rgba(255,255,255,.85)'/>
+    <path d='M100 95 v30 M85 110 h30' stroke='hsl(${hue2},90%,30%)' stroke-width='4' stroke-linecap='round'/>
+    <circle cx='100' cy='110' r='70' fill='none' stroke='hsl(${glow},100%,65%)' stroke-width='2' opacity='.5'/>
+  </svg>`);
+}
+function svgGem(color1, color2){
+  return b64svg(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+    <defs><linearGradient id='gg' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='${color1}'/><stop offset='100%' stop-color='${color2}'/>
+    </linearGradient>
+    <filter id='glow'><feGaussianBlur stdDeviation='6' result='b'/>
+      <feMerge><feMergeNode in='b'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs>
+    <polygon points='100,20 160,80 130,170 70,170 40,80' fill='url(#gg)' filter='url(#glow)' opacity='.95'/>
+    <polygon points='100,20 160,80 100,100' fill='rgba(255,255,255,.35)'/>
+    <polygon points='100,20 40,80 100,100' fill='rgba(255,255,255,.18)'/>
+    <polyline points='40,80 100,100 160,80' fill='none' stroke='rgba(255,255,255,.6)' stroke-width='2'/>
+  </svg>`);
+}
+
+/* ================= 50 ФИГУР ================= */
+const FIGURE_PATHS = [
+  {id:'star5',  name:'Звезда',        d:'M100 15 L123 78 L190 78 L135 118 L157 182 L100 143 L43 182 L65 118 L10 78 L77 78 Z'},
+  {id:'hex',    name:'Шестиугольник', d:'M100 20 L175 60 L175 140 L100 180 L25 140 L25 60 Z'},
+  {id:'diamond',name:'Ромб',          d:'M100 15 L185 100 L100 185 L15 100 Z'},
+  {id:'drop',   name:'Капля',         d:'M100 20 C140 70 165 110 165 140 A65 65 0 0 1 35 140 C35 110 60 70 100 20 Z'},
+  {id:'flame',  name:'Пламя',         d:'M100 20 C120 55 145 75 145 105 C145 125 125 145 100 165 C75 145 55 125 55 105 C55 75 80 55 100 20 Z'},
+  {id:'bolt',   name:'Молния',        d:'M115 20 L45 105 L95 105 L80 180 L155 80 L110 80 Z'},
+  {id:'leaf',   name:'Лист',          d:'M100 20 C160 50 175 115 100 180 C25 115 40 50 100 20 Z M100 45 L100 170'},
+  {id:'cube',   name:'Куб',           d:'M100 25 L175 65 L175 135 L100 175 L25 135 L25 65 Z M100 25 L100 175 M25 65 L100 105 L175 65'},
+  {id:'ring',   name:'Кольцо',        d:'M100 25 A75 75 0 1 0 100 175 A75 75 0 1 0 100 25 M100 60 A40 40 0 1 1 100 140 A40 40 0 1 1 100 60 Z'},
+  {id:'spiral', name:'Спираль',       d:'M100 100 m-70 0 a70 70 0 1 0 140 0 a55 55 0 1 1 -110 0 a40 40 0 1 0 80 0 a25 25 0 1 1 -50 0 a12 12 0 1 0 24 0'},
+
+  {id:'heart',  name:'Сердце',        d:'M100 175 C40 130 20 90 45 60 C65 40 90 50 100 70 C110 50 135 40 155 60 C180 90 160 130 100 175 Z'},
+  {id:'moon',   name:'Луна',          d:'M130 25 A75 75 0 1 0 130 175 A55 55 0 1 1 130 25 Z'},
+  {id:'sun',    name:'Солнце',        d:'M100 30 A25 25 0 1 0 100 80 A25 25 0 1 0 100 30 M100 10 L100 0 M100 180 L100 190 M10 100 L0 100 M190 100 L200 100 M40 40 L30 30 M160 160 L170 170 M160 40 L170 30 M40 160 L30 170'},
+  {id:'shield', name:'Щит',           d:'M100 20 L170 55 L170 110 C170 155 140 175 100 185 C60 175 30 155 30 110 L30 55 Z'},
+  {id:'sword',  name:'Меч',           d:'M100 15 L115 40 L115 130 L100 145 L85 130 L85 40 Z M65 145 L135 145 M95 145 L95 185 M105 145 L105 185'},
+  {id:'crown',  name:'Корона',        d:'M30 150 L20 60 L60 90 L100 40 L140 90 L180 60 L170 150 Z M30 150 L170 150'},
+  {id:'key',    name:'Ключ',          d:'M50 100 A35 35 0 1 1 100 65 L100 100 L190 100 L190 120 L165 120 L165 105 L140 105 L140 120 L100 120'},
+  {id:'anchor', name:'Якорь',         d:'M100 20 A15 15 0 1 0 100 50 A15 15 0 1 0 100 20 M100 50 L100 170 M60 70 L140 70 M100 170 C60 170 40 130 40 130 M100 170 C140 170 160 130 160 130'},
+  {id:'eye',    name:'Око',           d:'M20 100 C50 50 150 50 180 100 C150 150 50 150 20 100 Z M100 75 A25 25 0 1 0 100 125 A25 25 0 1 0 100 75 Z'},
+  {id:'skull',  name:'Череп',         d:'M50 40 C50 15 150 15 150 40 L150 120 L135 120 L135 160 L120 160 L120 140 L115 140 L115 165 L105 165 L105 140 L95 140 L95 165 L85 165 L85 140 L80 140 L80 160 L65 160 L65 120 L50 120 Z M65 70 A15 15 0 1 0 65 100 A15 15 0 1 0 65 70 Z M135 70 A15 15 0 1 0 135 100 A15 15 0 1 0 135 70 Z'},
+
+  {id:'planet', name:'Планета',       d:'M100 35 A65 65 0 1 0 100 165 A65 65 0 1 0 100 35 M160 60 C190 60 200 80 200 100 C200 130 160 140 160 140 M40 60 C10 60 0 80 0 100 C0 130 40 140 40 140'},
+  {id:'comet',  name:'Комета',        d:'M60 140 A40 40 0 1 0 60 60 A40 40 0 1 0 60 140 M90 90 L190 30 M90 105 L195 70 M85 120 L195 110'},
+  {id:'rocket', name:'Ракета',        d:'M100 15 C130 45 140 90 140 130 L100 160 L60 130 C60 90 70 45 100 15 Z M100 70 A10 10 0 1 0 100 90 A10 10 0 1 0 100 70 Z M70 160 L60 185 L80 175 Z M130 160 L140 185 L120 175 Z'},
+  {id:'torus',  name:'Тор',           d:'M100 30 A70 40 0 1 0 100 110 A70 40 0 1 0 100 30 M100 55 A40 20 0 1 1 100 95 A40 20 0 1 1 100 55 Z'},
+  {id:'cone',   name:'Конус',         d:'M100 25 L180 170 L20 170 Z M60 100 A40 15 0 1 0 140 100'},
+  {id:'cyl',    name:'Цилиндр',       d:'M40 60 L40 150 A60 20 0 1 0 120 0 L160 150 L160 60 A60 20 0 1 1 40 60 Z'},
+  {id:'octa',   name:'Октаэдр',       d:'M100 15 L170 70 L100 185 L30 70 Z M30 70 L100 100 L170 70 M100 100 L100 185'},
+  {id:'tetra',  name:'Тетраэдр',      d:'M100 20 L180 170 L20 170 Z M100 20 L100 170 M20 170 L140 100 L60 100'},
+  {id:'hexprism',name:'Призма',       d:'M60 40 L140 40 L170 80 L170 150 L140 190 L60 190 L30 150 L30 80 Z M60 40 L60 190 M140 40 L140 190 M30 80 L170 80'},
+  {id:'star6',  name:'Звезда-6',      d:'M100 15 L130 70 L190 70 L145 110 L160 170 L100 135 L40 170 L55 110 L10 70 L70 70 Z'},
+
+  {id:'ankh',   name:'Анкх',          d:'M100 20 A30 30 0 1 0 100 80 A30 30 0 1 0 100 20 M70 80 L130 80 M100 80 L100 180 M75 110 L125 110'},
+  {id:'phoenix',name:'Феникс',        d:'M100 15 C120 40 160 40 175 70 C160 80 140 80 130 90 L130 130 C160 130 180 150 180 180 L100 160 L20 180 C20 150 40 130 70 130 L70 90 C60 80 40 80 25 70 C40 40 80 40 100 15 Z'},
+  {id:'dragon', name:'Дракон',        d:'M20 100 C40 60 80 40 120 50 L150 30 L140 60 L180 70 L150 90 L180 130 L130 120 C100 150 60 150 20 100 Z M60 90 A5 5 0 1 0 60 100'},
+  {id:'unicorn',name:'Единорог',      d:'M50 160 C50 120 80 90 120 90 L140 40 L150 90 L170 90 L150 110 L150 130 C150 155 130 170 100 170 L100 190 L80 190 L80 170 L50 170 Z M110 100 A5 5 0 1 0 110 110'},
+  {id:'clover', name:'Клевер',        d:'M100 100 A30 30 0 1 1 100 40 A30 30 0 1 1 160 100 A30 30 0 1 1 100 160 A30 30 0 1 1 40 100 A30 30 0 1 1 100 40 M100 100 L100 190'},
+  {id:'mush',   name:'Гриб',          d:'M30 100 A70 50 0 1 1 170 100 Z M80 100 L80 170 A20 20 0 0 0 120 170 L120 100'},
+  {id:'flower', name:'Цветок',        d:'M100 100 A30 30 0 1 1 100 40 A30 30 0 1 1 160 100 A30 30 0 1 1 100 160 A30 30 0 1 1 40 100 A30 30 0 1 1 100 40'},
+  {id:'spider', name:'Паук',          d:'M100 80 A20 20 0 1 0 100 120 A20 20 0 1 0 100 80 M80 90 L30 70 M80 100 L25 100 M80 110 L30 130 M120 90 L170 70 M120 100 L175 100 M120 110 L170 130 M80 80 L50 30 M120 80 L150 30'},
+  {id:'paw',    name:'Лапа',          d:'M70 90 A15 20 0 1 0 70 130 A15 20 0 1 0 70 90 M130 90 A15 20 0 1 0 130 130 A15 20 0 1 0 130 90 M90 60 A15 20 0 1 0 90 100 A15 20 0 1 0 90 60 M110 60 A15 20 0 1 0 110 100 A15 20 0 1 0 110 60 M100 130 C70 130 60 170 100 185 C140 170 130 130 100 130 Z'},
+  {id:'vortex', name:'Вихрь',         d:'M100 20 C160 20 180 80 180 100 C180 160 120 180 100 180 C40 180 20 120 20 100 C20 60 60 40 100 40 C130 40 150 80 150 100 C150 130 120 150 100 150 C75 150 60 120 60 100 C60 85 75 75 90 75'},
+
+  {id:'infinity',name:'Бесконечность',d:'M50 100 A30 30 0 1 1 80 100 A30 30 0 1 1 110 100 A30 30 0 1 1 140 100 A30 30 0 1 1 110 100 A30 30 0 1 1 80 100 A30 30 0 1 1 50 100'},
+  {id:'atom',   name:'Атом',          d:'M100 100 A15 15 0 1 0 100 130 A15 15 0 1 0 100 100 M40 60 A60 60 0 0 0 160 140 M160 60 A60 60 0 0 1 40 140 M60 40 A60 60 0 0 1 140 160'},
+  {id:'galaxy', name:'Галактика',     d:'M100 20 C180 20 200 100 180 140 C160 180 60 180 40 140 C20 100 60 40 100 40 C140 40 160 100 140 140 C120 180 80 180 60 140'},
+  {id:'portal', name:'Портал',        d:'M100 20 C160 20 180 60 180 100 C180 140 160 180 100 180 C40 180 20 140 20 100 C20 60 40 20 100 20 Z M100 50 C140 50 155 75 155 100 C155 125 140 150 100 150 C60 150 45 125 45 100 C45 75 60 50 100 50 Z'},
+  {id:'obsidian',name:'Обсидиан',     d:'M100 15 L180 60 L160 150 L100 190 L40 150 L20 60 Z M100 15 L100 100 L180 60 M100 100 L160 150 M100 100 L40 150 M100 100 L20 60'},
+  {id:'void',   name:'Пустота',       d:'M100 20 A80 80 0 1 0 100 180 A80 80 0 1 0 100 20 M100 60 A40 40 0 1 1 100 140 A40 40 0 1 1 100 60 Z M100 80 L100 120 M80 100 L120 100'},
+  {id:'rune',   name:'Руна',          d:'M80 20 L80 180 M80 100 L140 40 M80 100 L140 160 M110 60 L140 40 M110 140 L140 160'},
+  {id:'skull2', name:'Череп-2',       d:'M50 50 C50 25 150 25 150 50 L150 130 L120 130 L120 170 L110 170 L110 145 L90 145 L90 170 L80 170 L80 130 L50 130 Z M65 90 L90 90 L90 115 L65 115 Z M110 90 L135 90 L135 115 L110 115 Z'},
+  {id:'gear',   name:'Шестерня',      d:'M100 20 L120 50 L150 40 L160 70 L190 80 L180 110 L200 130 L170 150 L180 180 L150 180 L140 210 L110 195 L90 220 L70 195 L40 210 L30 180 L0 170 L10 140 L-10 120 L20 100 L10 70 L40 60 L50 30 L80 40 Z M100 80 A40 40 0 1 0 100 160 A40 40 0 1 0 100 80 Z'},
+  {id:'final',  name:'Финал',         d:'M100 15 L120 60 L170 40 L160 90 L200 100 L160 110 L170 160 L120 140 L100 185 L80 140 L30 160 L40 110 L0 100 L40 90 L30 40 L80 60 Z M100 65 A35 35 0 1 0 100 135 A35 35 0 1 0 100 65 Z'}
+];
+
+function svgFigure(idx){
+  const fig = FIGURE_PATHS[idx];
+  const tier = Math.floor(idx / 10);
+  const palette = [
+    ['#5ef0ff','#1a4fd6'],
+    ['#7bffb5','#1a8f5a'],
+    ['#ff5ef0','#7a1fd0'],
+    ['#ff9a3d','#c43a00'],
+    ['#ff2e63','#8a0019']
+  ][tier];
+  return b64svg(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+    <defs><linearGradient id='fg' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='${palette[0]}'/>
+      <stop offset='100%' stop-color='${palette[1]}'/>
+    </linearGradient>
+    <filter id='fgw'><feGaussianBlur stdDeviation='5' result='b'/>
+      <feMerge><feMergeNode in='b'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs>
+    <path d='${fig.d}' fill='url(#fg)' filter='url(#fgw)' fill-rule='evenodd' stroke='rgba(255,255,255,.5)' stroke-width='1.5'/>
+  </svg>`);
+}
+
+/* ================= ДАННЫЕ ================= */
+const RARITY = {
+  common:    {name:'Обычный',    color:'#9aa7c7', img:svgGem('#aab6d6','#5a6688')},
+  rare:      {name:'Редкий',     color:'#4da6ff', img:svgGem('#5ec2ff','#1a5fd6')},
+  epic:      {name:'Эпический',  color:'#b06cff', img:svgGem('#d28bff','#6a1fd0')},
+  legendary: {name:'Легендарный',color:'#ffc43d', img:svgGem('#ffe08a','#d98a00')}
+};
+const RARITY_ORDER = ['common','rare','epic','legendary'];
+
+const FIGURE_TIERS = [
+  {key:'fig1', name:'Редкая фигура',     color:'#5ef0ff', basePrice:10000},
+  {key:'fig2', name:'Очень редкая фиг.', color:'#7bffb5', basePrice:15000},
+  {key:'fig3', name:'Эпическая фигура',  color:'#ff5ef0', basePrice:22000},
+  {key:'fig4', name:'Мифическая фигура', color:'#ff9a3d', basePrice:40000},
+  {key:'fig5', name:'Легенд. фигура',    color:'#ff2e63', basePrice:65000}
+];
+
+const FIGURES = FIGURE_PATHS.map((f, i) => {
+  const tierIdx = Math.floor(i / 10);
+  const tier = FIGURE_TIERS[tierIdx];
+  const pos = i % 10;
+  const mult = 0.6 + 0.8 * (pos / 9);
+  return {
+    key: 'fig_' + f.id,
+    id: f.id, idx: i, name: f.name,
+    tierKey: tier.key, tierName: tier.name, color: tier.color,
+    img: svgFigure(i),
+    isFigure: true,
+    basePrice: Math.round(tier.basePrice * mult)
+  };
+});
+
+/* Пулы по кейсам: {common, rare, epic, legendary, fig1..fig5}
+   Сумма = 100 для каждого кейса.
+   Для void common = 0.000001 даёт P = 0.000001%. */
+const CASES = [
+  {id:'starter', name:'Стартовый',   price:50,   tier:'budget',  img:svgCase(200,220,200),
+   poolWeights:{common:57.15, rare:27.10, epic:9.0449, legendary:2.00, fig1:2.0, fig2:1.3, fig3:0.9, fig4:0.5, fig5:0.0051}},
+  {id:'budget',  name:'Бюджетный',   price:120,  tier:'budget',  img:svgCase(170,190,170),
+   poolWeights:{common:52.0, rare:25.0, epic:9.0, legendary:3.0, fig1:5.0, fig2:3.0, fig3:2.0, fig4:0.9, fig5:0.1}},
+  {id:'neon',    name:'Неоновый',    price:350,  tier:'mid',     img:svgCase(280,300,280),
+   poolWeights:{common:40.0, rare:20.0, epic:10.0, legendary:3.0, fig1:12.0, fig2:8.0, fig3:4.0, fig4:2.5, fig5:0.5}},
+  {id:'cyber',   name:'Кибер',       price:600,  tier:'mid',     img:svgCase(180,160,180),
+   poolWeights:{common:25.0, rare:15.0, epic:8.0, legendary:2.0, fig1:20.0, fig2:13.0, fig3:9.0, fig4:6.0, fig5:2.0}},
+  {id:'golden',  name:'Золотой',     price:1200, tier:'premium', img:svgCase(45,30,45),
+   poolWeights:{common:8.0, rare:5.0, epic:3.0, legendary:1.0, fig1:30.0, fig2:22.0, fig3:15.0, fig4:12.0, fig5:4.0}},
+  {id:'dragon',  name:'Драконий',    price:2500, tier:'premium', img:svgCase(0,340,0),
+   poolWeights:{common:1.0, rare:0.5, epic:0.2, legendary:0.05, fig1:40.0, fig2:28.0, fig3:18.0, fig4:10.0, fig5:2.25}},
+  {id:'cosmic',  name:'Космический', price:5000, tier:'premium', img:svgCase(250,270,250),
+   poolWeights:{common:0.01, rare:0.005, epic:0.002, legendary:0.0005, fig1:45.0, fig2:30.0, fig3:15.0, fig4:8.0, fig5:1.9825}},
+  {id:'void',    name:'Пустота',     price:10000,tier:'premium', img:svgCase(270,290,270),
+   poolWeights:{common:0.000001, rare:0.0000001, epic:0.00000001, legendary:0.000000001,
+                fig1:49.9999995, fig2:27.9999997, fig3:13.9999998, fig4:5.9999999, fig5:1.9999999}}
+];
+
+/* Общий пул (для отображения модалки — используется вместе с case.poolWeights) */
+const FULL_POOL = [
+  ...RARITY_ORDER.map(k => ({
+    key: k, name: RARITY[k].name, color: RARITY[k].color,
+    img: RARITY[k].img, isFigure: false,
+    basePrice: {common:35, rare:75, epic:225, legendary:1000}[k]
+  })),
+  ...FIGURES
+];
+
+const POOL_SORTED_BY_WEIGHT = [...FULL_POOL].sort((a,b) => {
+  const wa = a.isFigure ? 0.1 : ({common:57, rare:27, epic:9, legendary:2}[a.key]);
+  const wb = b.isFigure ? 0.1 : ({common:57, rare:27, epic:9, legendary:2}[b.key]);
+  return wb - wa;
+});
+const POOL_RANK = {};
+POOL_SORTED_BY_WEIGHT.forEach((r, i) => { POOL_RANK[r.key] = i; });
+
+/* ================= ХЕЛПЕРЫ ПУЛА КЕЙСА ================= */
+function itemWeightInCase(c, item){
+  if(item.isFigure){
+    const tw = c.poolWeights[item.tierKey] || 0;
+    return tw / 10;
+  }
+  return c.poolWeights[item.rarityKey] || 0;
+}
+
+function rollFromCase(c){
+  const weights = FULL_POOL.map(it => itemWeightInCase(c, it));
+  const total = weights.reduce((s,w) => s + w, 0);
+  let r = Math.random() * total;
+  for(let i=0;i<FULL_POOL.length;i++){
+    if(r < weights[i]) return FULL_POOL[i];
+    r -= weights[i];
+  }
+  return FULL_POOL[0];
+}
+
+function chanceInCase(c, item){
+  const total = FULL_POOL.reduce((s, it) => s + itemWeightInCase(c, it), 0);
+  const w = itemWeightInCase(c, item);
+  return (w / total) * 100; // в процентах
+}
+
+function formatChance(p){
+  if(p === 0) return '0%';
+  if(p >= 1) return p.toFixed(2) + '%';
+  if(p >= 0.01) return p.toFixed(4) + '%';
+  if(p >= 0.0001) return p.toFixed(6) + '%';
+  return p.toExponential(3) + '%';
+}
+
+/* ================= ЦЕНЫ ================= */
+function formatPrice(n){
+  if(!isFinite(n)) return '∞';
+  return n.toLocaleString('ru-RU');
+}
+function priceOfKey(key){
+  const fromPool = FULL_POOL.find(r => r.key === key);
+  if(fromPool && fromPool.basePrice) return fromPool.basePrice;
+  return 0;
+}
+function priceOfItem(item){
+  return item.basePrice || priceOfKey(item.rarityKey) || 0;
+}
+
+/* ================= ХРАНИЛИЩЕ ================= */
+const storage = (() => {
+  const KEY = 'neoncases_v12';
+  let lsOK = false;
+  try {
+    const probe = '__probe__';
+    window.localStorage.setItem(probe, '1');
+    window.localStorage.removeItem(probe);
+    lsOK = true;
+  } catch(e){ lsOK = false; }
+
+  let wnOK = false;
+  try {
+    const prev = window.name;
+    window.name = '__probe__';
+    wnOK = (window.name === '__probe__');
+    window.name = prev;
+  } catch(e){ wnOK = false; }
+
+  const mem = Object.create(null);
+  function get(k){
+    if(lsOK){ try { const v = window.localStorage.getItem(k); if(v !== null) return v; } catch(e){} }
+    if(wnOK){
+      try {
+        const raw = window.name;
+        if(raw && raw.startsWith('{') && raw.endsWith('}')){
+          const parsed = JSON.parse(raw);
+          if(parsed && k in parsed) return parsed[k];
+        }
+      } catch(e){}
+    }
+    return k in mem ? mem[k] : null;
+  }
+  function set(k, v){
+    if(lsOK){ try { window.localStorage.setItem(k, v); } catch(e){} }
+    if(wnOK){
+      try {
+        let bag = {};
+        if(window.name && window.name.startsWith('{') && window.name.endsWith('}')){
+          try { bag = JSON.parse(window.name) || {}; } catch(e){ bag = {}; }
+        }
+        bag[k] = v;
+        window.name = JSON.stringify(bag);
+      } catch(e){}
+    }
+    mem[k] = v;
+  }
+  function remove(k){
+    if(lsOK){ try { window.localStorage.removeItem(k); } catch(e){} }
+    if(wnOK){
+      try {
+        if(window.name && window.name.startsWith('{') && window.name.endsWith('}')){
+          const bag = JSON.parse(window.name) || {};
+          delete bag[k];
+          window.name = JSON.stringify(bag);
+        }
+      } catch(e){}
+    }
+    delete mem[k];
+  }
+  const mode = lsOK ? 'localStorage' : (wnOK ? 'window.name' : 'memory');
+  return { get, set, remove, mode, KEY };
+})();
+
+console.info('[NEON CASES] Хранилище: ' + storage.mode);
+
+/* ================= СОСТОЯНИЕ ================= */
+const state = {
+  balance:1000, inventory:[], opened:0, spent:0, best:null,
+  xp:0, level:1, lastBonus:0, devMode:false
+};
+try {
+  const raw = storage.get(storage.KEY);
+  if(raw){
+    const loaded = JSON.parse(raw);
+    if(typeof loaded.balance === 'number') state.balance = loaded.balance;
+    if(Array.isArray(loaded.inventory)) state.inventory = loaded.inventory;
+    if(typeof loaded.opened === 'number') state.opened = loaded.opened;
+    if(typeof loaded.spent === 'number') state.spent = loaded.spent;
+    if(loaded.best && loaded.best.rarityKey) state.best = loaded.best;
+    if(typeof loaded.xp === 'number') state.xp = loaded.xp;
+    if(typeof loaded.level === 'number') state.level = loaded.level;
+    if(typeof loaded.lastBonus === 'number') state.lastBonus = loaded.lastBonus;
+    state.devMode = false;
+  }
+} catch(e){ console.warn('load state:', e); }
+
+function save(){
+  try {
+    const toSave = {
+      balance: isFinite(state.balance) ? state.balance : 1000,
+      inventory: state.inventory,
+      opened: state.opened, spent: state.spent, best: state.best,
+      xp: state.xp, level: state.level, lastBonus: state.lastBonus
+    };
+    storage.set(storage.KEY, JSON.stringify(toSave));
+  }
+  catch(e){ console.warn('save state:', e); }
+}
+window.addEventListener('beforeunload', save);
+setInterval(save, 5000);
+
+/* ================= УТИЛИТЫ ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function toast(text, kind){
+  const t = document.createElement('div');
+  t.className = 'toast' + (kind ? ' ' + kind : '');
+  t.textContent = text;
+  $('#toasts').appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+function formatBalance(b){
+  if(!isFinite(b)) return '∞';
+  return b.toLocaleString('ru-RU');
+}
+function rarityClass(item){
+  if(item.isFigure){
+    const tierIdx = FIGURE_TIERS.findIndex(t => t.key === item.tierKey);
+    return 'rarity-fig' + (tierIdx + 1);
+  }
+  return 'rarity-' + item.rarityKey;
+}
+
+/* ================= DEV-РЕЖИМ ================= */
+const HIDDEN_DEV_CODE = 'SULkod20133';
+const PUBLIC_DEV_CODE = 'IDONTLUS_9999';
+
+let devBuffer = '';
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key.length !== 1) return;
+  devBuffer += e.key;
+  if (devBuffer.length > HIDDEN_DEV_CODE.length) {
+    devBuffer = devBuffer.slice(-HIDDEN_DEV_CODE.length);
+  }
+  if (devBuffer.toLowerCase() === HIDDEN_DEV_CODE.toLowerCase()) {
+    devBuffer = '';
+    toggleDevMode();
+  }
+});
+
+function setDevStatus(text){
+  const el = $('#devStatus');
+  if(el) el.textContent = text;
+}
+function toggleDevMode(){
+  state.devMode = !state.devMode;
+  if(state.devMode){
+    state.balance = Infinity;
+    toast('DEV: активирован', 'dev');
+    console.info('%cDEV MODE ON', 'color:#00e5ff;font-weight:900');
+    beep(880, .15); beep(1200, .15);
+    const flash = $('#flash');
+    if(flash){ flash.classList.add('on'); setTimeout(()=>flash.classList.remove('on'), 400); }
+    setDevStatus('devMode: ON');
+  } else {
+    if(!isFinite(state.balance)) state.balance = 1000;
+    toast('DEV: деактивирован', 'dev');
+    console.info('%cDEV MODE OFF', 'color:#ff4d6d;font-weight:900');
+    setDevStatus('devMode: OFF');
+  }
+  updateUI();
+}
+
+$('#devApplyBtn').addEventListener('click', () => {
+  const val = ($('#devCodeInput').value || '').trim();
+  if(val === PUBLIC_DEV_CODE){
+    if(!state.devMode){ toggleDevMode(); }
+    else { setDevStatus('devMode: ON (already)'); }
+    $('#devCodeInput').value = '';
+  } else { setDevStatus('invalid'); }
+});
+$('#devOffBtn').addEventListener('click', () => {
+  if(state.devMode){ toggleDevMode(); }
+  else { setDevStatus('devMode: OFF (already)'); }
+});
+$('#devCodeInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ $('#devApplyBtn').click(); }
+});
+
+/* ================= ЧАСТИЦЫ-ФОН ================= */
+(function(){
+  const c = $('#particles'), ctx = c.getContext('2d');
+  let W, H, dots = [];
+  function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+  resize(); addEventListener('resize', resize);
+  for(let i=0;i<60;i++) dots.push({x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3, r:Math.random()*2+.5,
+    c: Math.random()<.5 ? '0,229,255' : '123,92,255'});
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(const d of dots){
+      d.x+=d.vx; d.y+=d.vy;
+      if(d.x<0||d.x>W) d.vx*=-1;
+      if(d.y<0||d.y>H) d.vy*=-1;
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,7);
+      ctx.fillStyle = `rgba(${d.c},.6)`; ctx.fill();
+    }
+    for(let i=0;i<dots.length;i++) for(let j=i+1;j<dots.length;j++){
+      const a=dots[i], b=dots[j], dx=a.x-b.x, dy=a.y-b.y, dist=Math.hypot(dx,dy);
+      if(dist<120){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(123,92,255,${(1-dist/120)*.15})`; ctx.stroke(); }
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* ================= КОНФЕТТИ ================= */
+function confetti(){
+  const c = $('#confetti'), ctx = c.getContext('2d');
+  c.width = innerWidth; c.height = innerHeight;
+  const parts = [];
+  for(let i=0;i<160;i++) parts.push({
+    x: innerWidth/2 + (Math.random()-.5)*200,
+    y: innerHeight/2 + (Math.random()-.5)*100,
+    vx:(Math.random()-.5)*10, vy:Math.random()*-12-2,
+    r:Math.random()*4+2, col:['#ffc43d','#00e5ff','#7b5cff','#ff4d6d','#2ee6a8','#ff5ef0'][Math.floor(Math.random()*6)],
+    life:90+Math.random()*40
+  });
+  (function frame(){
+    ctx.clearRect(0,0,c.width,c.height);
+    let alive = false;
+    for(const p of parts){
+      if(p.life-- <= 0) continue;
+      alive = true;
+      p.x+=p.vx; p.y+=p.vy; p.vy+=.35;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7); ctx.fillStyle=p.col; ctx.fill();
+    }
+    if(alive) requestAnimationFrame(frame); else ctx.clearRect(0,0,c.width,c.height);
+  })();
+}
+
+/* ================= ЗВУК ================= */
+let audioCtx;
+function beep(freq=440, dur=.08){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.frequency.value = freq; o.type='sine';
+    g.gain.setValueAtTime(.08, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime+dur);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+
+/* ================= РЕНДЕР КЕЙСОВ ================= */
+let currentFilter = 'all';
+function renderCases(){
+  try{
+    const grid = $('#caseGrid');
+    grid.innerHTML = '';
+    const list = CASES.filter(c => currentFilter==='all' || c.tier===currentFilter);
+    if(list.length===0){ grid.innerHTML = '<p class="muted">Нет кейсов в этом фильтре.</p>'; return; }
+    for(const c of list){
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="thumb"><img src="${c.img}" alt=""/></div>
+        <h3>${c.name}</h3>
+        <div class="price"><div class="coin"></div>${c.price}</div>`;
+      card.addEventListener('click', ()=>openContentModal(c));
+      grid.appendChild(card);
+    }
+  }catch(err){ console.error('renderCases:', err); toast('Ошибка рендера кейсов'); }
+}
+renderCases();
+
+$('#filters').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn || !btn.dataset.f) return;
+  $$('#filters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = btn.dataset.f;
+  renderCases();
+});
+
+/* ================= ПРОСМОТР СОДЕРЖИМОГО КЕЙСА ================= */
+let contentCase = null;
+let contentFilter = 'all';
+
+function renderContentList(){
+  const list = $('#contentList');
+  list.innerHTML = '';
+
+  const items = [...FULL_POOL].filter(it => {
+    if(contentFilter === 'all') return true;
+    if(contentFilter === 'color') return !it.isFigure;
+    if(contentFilter.startsWith('fig')) return it.tierKey === contentFilter;
+    return true;
+  });
+  // Сортировка по шансу в кейсе (больше — выше)
+  items.sort((a,b) => itemWeightInCase(contentCase, b) - itemWeightInCase(contentCase, a));
+
+  for(const it of items){
+    const row = document.createElement('div');
+    row.className = 'content-item';
+    const p = chanceInCase(contentCase, it);
+    row.innerHTML = `
+      <img src="${it.img}" alt=""/>
+      <div class="ci-name" style="color:${it.color}">${it.name}${it.isFigure ? ' (фигура)' : ''}</div>
+      <div class="ci-chance" style="color:${it.color}">${formatChance(p)}</div>
+      <div class="ci-price">${formatPrice(priceOfItem(it))}</div>
+    `;
+    list.appendChild(row);
+  }
+}
+
+function openContentModal(c){
+  contentCase = c;
+  contentFilter = 'all';
+  $$('.filters-inline').forEach(b => b.classList.toggle('active', b.dataset.cf === 'all'));
+  $('#contentTitle').textContent = 'Содержимое: ' + c.name;
+  $('#contentSub').textContent = 'Цена открытия: ' + c.price + ' · Всего вариантов: ' + FULL_POOL.length;
+  renderContentList();
+  $('#contentModalBg').classList.add('show');
+}
+
+$('#contentModalBg').addEventListener('click', e=>{
+  if(e.target.id === 'contentModalBg'){
+    $('#contentModalBg').classList.remove('show');
+    contentCase = null;
+  }
+});
+$('#contentCloseBtn').addEventListener('click', ()=>{
+  $('#contentModalBg').classList.remove('show');
+  contentCase = null;
+});
+$('#contentOpenBtn').addEventListener('click', ()=>{
+  if(!contentCase) return;
+  const c = contentCase;
+  $('#contentModalBg').classList.remove('show');
+  contentCase = null;
+  askQuantity(c);
+});
+$$('.filters-inline').forEach(btn => {
+  btn.addEventListener('click', ()=>{
+    $$('.filters-inline').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    contentFilter = btn.dataset.cf;
+    renderContentList();
+  });
+});
+
+/* ================= ВЫБОР КОЛИЧЕСТВА ================= */
+let pendingCase = null;
+
+function maxOpenable(c){
+  if(state.devMode) return 999;
+  return Math.max(0, Math.floor(state.balance / c.price));
+}
+
+function askQuantity(c){
+  pendingCase = c;
+  const maxN = maxOpenable(c);
+  if(maxN <= 0){ toast('Недостаточно средств'); return; }
+
+  $('#qtyTitle').textContent = 'Сколько открыть: ' + c.name + '?';
+  $('#qtyInfo').textContent = 'Цена за 1: ' + c.price + ' · Доступно по балансу: ' + maxN + (state.devMode ? ' (dev: без ограничений)' : '');
+  $('#qtyMax').textContent = maxN;
+  const inp = $('#qtyInput');
+  inp.min = 1; inp.max = maxN; inp.value = 1;
+  $('#qtyModalBg').classList.add('show');
+}
+
+$('#qtyCancel').addEventListener('click', ()=>{
+  $('#qtyModalBg').classList.remove('show');
+  pendingCase = null;
+});
+
+$('#qtyConfirm').addEventListener('click', ()=>{
+  if(!pendingCase) return;
+  const c = pendingCase;
+  const maxN = maxOpenable(c);
+  let n = parseInt($('#qtyInput').value, 10);
+  if(!isFinite(n) || n < 1) n = 1;
+  if(n > maxN) n = maxN;
+  $('#qtyModalBg').classList.remove('show');
+  pendingCase = null;
+  openCaseBatch(c, n);
+});
+
+/* ================= ОТКРЫТИЕ КЕЙСОВ ================= */
+let opening = false, rollTimer = null, tickTimer = null;
+
+function openCaseBatch(c, n){
+  if(opening){ toast('Подожди завершения текущего открытия'); return; }
+  opening = true;
+
+  try{
+    const results = [];
+    for(let i=0;i<n;i++){
+      if(!state.devMode && state.balance < c.price) break;
+      if(!state.devMode) state.balance -= c.price;
+      state.spent += c.price;
+
+      let result;
+      if(state.devMode){
+        const topTierFigures = FIGURES.filter(f => f.tierKey === 'fig5');
+        result = topTierFigures[Math.floor(Math.random()*topTierFigures.length)];
+      } else {
+        result = rollFromCase(c);
+      }
+
+      const item = {
+        id: Date.now() + Math.random(),
+        rarityKey: result.key,
+        rarityName: result.name,
+        color: result.color,
+        name: result.name + (result.isFigure ? ' (фигура)' : ' предмет'),
+        img: result.img,
+        isFigure: !!result.isFigure,
+        tierKey: result.tierKey || null,
+        basePrice: result.basePrice || priceOfKey(result.key)
+      };
+
+      state.inventory.push(item);
+      state.opened++;
+      state.xp += 10;
+      while(state.xp >= state.level*100){ state.level++; state.xp -= state.level*100; }
+      if(!state.best || POOL_RANK[item.rarityKey] > POOL_RANK[state.best.rarityKey]){
+        state.best = item;
+      }
+      results.push(item);
+      addDrop(item);
+    }
+    updateUI();
+
+    if(results.length === 0){ toast('Недостаточно средств'); opening = false; return; }
+    const last = results[results.length - 1];
+
+    const roulette = $('#roulette');
+    roulette.style.transition = 'none';
+    roulette.style.transform = 'translateX(0)';
+    roulette.innerHTML = '';
+    const winnerIndex = 32, total = 40;
+    for(let i=0;i<total;i++){
+      const r = i===winnerIndex ? last : rollFromCase(c);
+      const el = document.createElement('div');
+      el.className = 'r-item';
+      el.innerHTML = `<img src="${r.img}" alt=""/><small style="color:${r.color}">${r.name}</small>`;
+      if(i===winnerIndex) el.style.borderColor = r.color;
+      roulette.appendChild(el);
+    }
+
+    $('#mTitle').textContent = 'Открываем: ' + c.name + ' × ' + results.length;
+    $('#mResult').style.display = 'none';
+    $('#modalBg').classList.add('show');
+
+    setTimeout(()=>{
+      const wrap = document.querySelector('.roulette-wrap');
+      const wrapW = wrap.clientWidth || 600;
+      const itemW = 120 + 12;
+      const jitter = (Math.random()*50 - 25);
+      const offset = -(winnerIndex*itemW - wrapW/2 + itemW/2 + jitter);
+
+      let ticks = 0;
+      tickTimer = setInterval(()=>{ beep(600+Math.random()*300,.03); if(++ticks>18) clearInterval(tickTimer); }, 180);
+
+      roulette.style.transition = 'transform 4s cubic-bezier(.15,.85,.25,1)';
+      roulette.style.transform = `translateX(${offset}px)`;
+
+      rollTimer = setTimeout(()=>{
+        try{
+          clearInterval(tickTimer);
+          $('#mTitle').textContent = 'Результат' + (results.length > 1 ? ' (последний из ' + results.length + ')' : '');
+          $('#mResult').style.display = 'block';
+          $('#mEmoji').innerHTML = `<img src="${last.img}" style="color:${last.color}"/>`;
+          $('#mItemName').textContent = last.name;
+          $('#mRarity').textContent = last.rarityName;
+          $('#mRarity').className = rarityClass(last);
+          $('#mPrice').textContent = 'Цена: ' + formatPrice(priceOfItem(last));
+
+          if(results.length > 1){
+            const figures = results.filter(r => r.isFigure).length;
+            const legends = results.filter(r => r.rarityKey === 'legendary').length;
+            toast('Открыто ' + results.length +
+              ' · фигур: ' + figures + ' · легендарок: ' + legends,
+              figures > 0 ? 'fig' : (legends > 0 ? 'gold' : undefined));
+          }
+
+          if(last.isFigure){
+            toast('ФИГУРА: ' + last.rarityName, 'fig');
+            confetti(); beep(880,.2); beep(1200,.2); beep(1500,.2);
+            const flash = $('#flash'); flash.classList.add('on');
+            setTimeout(()=>flash.classList.remove('on'), 500);
+          } else if(last.rarityKey === 'legendary'){
+            toast('ЛЕГЕНДАРНЫЙ ДРОП!', 'gold');
+            confetti(); beep(880,.2); beep(1200,.2);
+            const flash = $('#flash'); flash.classList.add('on');
+            setTimeout(()=>flash.classList.remove('on'), 400);
+          } else if(last.rarityKey === 'epic'){ confetti(); beep(700,.15); }
+          else { beep(440,.1); }
+        } catch(inner){
+          console.error('result stage:', inner);
+        } finally {
+          opening = false; rollTimer = null;
+        }
+      }, 4200);
+    }, 30);
+  } catch(err){
+    console.error('openCaseBatch:', err);
+    toast('Ошибка открытия: ' + err.message);
+    opening = false;
+  }
+}
+
+function closeModal(){
+  $('#modalBg').classList.remove('show');
+  if(rollTimer){ clearTimeout(rollTimer); rollTimer = null; }
+  if(tickTimer){ clearInterval(tickTimer); tickTimer = null; }
+  opening = false;
+}
+$('#mClose').addEventListener('click', closeModal);
+$('#mCancel').addEventListener('click', closeModal);
+$('#modalBg').addEventListener('click', e=>{ if(e.target.id==='modalBg') closeModal(); });
+
+/* ================= ЛЕНТА ДРОПОВ ================= */
+function addDrop(item){
+  const feed = $('#dropFeed');
+  const el = document.createElement('div');
+  el.className = 'drop';
+  el.innerHTML = `<span class="dot" style="background:${item.color};box-shadow:0 0 10px ${item.color}"></span>${item.name}`;
+  feed.prepend(el);
+  while(feed.children.length > 12) feed.lastChild.remove();
+}
+(function seedDropFeed(){
+  const demo = CASES[0];
+  for(let i=0;i<6;i++){
+    const r = rollFromCase(demo);
+    addDrop({
+      rarityKey: r.key, rarityName: r.name,
+      name: r.name + (r.isFigure?' (фигура)':' предмет'),
+      color: r.color, img: r.img,
+      isFigure: !!r.isFigure, tierKey: r.tierKey || null
+    });
+  }
+})();
+
+/* ================= ИНВЕНТАРЬ ================= */
+let selectedForUpgrade = null;
+
+function renderInventory(){
+  const grid = $('#invGrid'), empty = $('#invEmpty');
+  grid.innerHTML = '';
+  if(state.inventory.length===0){ empty.style.display='block'; }
+  else{
+    empty.style.display='none';
+    for(const it of state.inventory){
+      const el = document.createElement('div');
+      el.className = 'inv-item';
+      el.style.borderColor = it.color;
+      el.innerHTML = `<img src="${it.img}" alt=""/>
+        <small style="color:${it.color}">${it.rarityName}</small>
+        <small style="color:var(--gold);font-weight:800">${formatPrice(priceOfItem(it))}</small>`;
+      grid.appendChild(el);
+    }
+  }
+  renderUpgrade();
+}
+
+function renderUpgrade(){
+  const grid = $('#upgradeGrid');
+  grid.innerHTML = '';
+  if(state.inventory.length===0){
+    grid.innerHTML = '<p class="muted">Инвентарь пуст.</p>';
+    const info = $('#upSelectedInfo');
+    if(info) info.textContent = 'Предмет не выбран';
+    return;
+  }
+  for(const it of state.inventory){
+    const el = document.createElement('div');
+    el.className = 'inv-item';
+    el.style.cursor = 'pointer';
+    el.style.borderColor = it.color;
+    if(selectedForUpgrade && selectedForUpgrade.id === it.id)
+      el.style.boxShadow = `0 0 0 2px ${it.color}`;
+    el.innerHTML = `<img src="${it.img}" alt=""/>
+      <small style="color:${it.color}">${it.rarityName}</small>
+      <small style="color:var(--gold);font-weight:800">${formatPrice(priceOfItem(it))}</small>`;
+    el.addEventListener('click', ()=>{ selectedForUpgrade = it; renderUpgrade(); });
+    grid.appendChild(el);
+  }
+  const info = $('#upSelectedInfo');
+  if(info){
+    if(selectedForUpgrade){
+      info.textContent = 'Выбрано: ' + selectedForUpgrade.name +
+        ' · ' + selectedForUpgrade.rarityName +
+        ' · ' + formatPrice(priceOfItem(selectedForUpgrade));
+    } else {
+      info.textContent = 'Предмет не выбран';
+    }
+  }
+}
+
+/* ================= АПГРЕЙД ================= */
+let upAnimating = false;
+
+function runUpgrade(chancePercent){
+  if(upAnimating){ toast('Апгрейд уже идёт'); return; }
+  if(!selectedForUpgrade){ toast('Выбери предмет'); return; }
+
+  let cp = Number(chancePercent);
+  if(!isFinite(cp) || cp < 1) cp = 1;
+  if(cp > 99) cp = 99;
+
+  const idx = state.inventory.findIndex(x => x.id === selectedForUpgrade.id);
+  if(idx === -1){ toast('Предмет не найден'); selectedForUpgrade = null; renderUpgrade(); return; }
+
+  upAnimating = true;
+  const wheel = $('#wheel');
+  const needle = $('#wheelNeedle');
+  const status = $('#upStatus');
+
+  const successDeg = cp * 3.6;
+  wheel.style.setProperty('--success-deg', successDeg + 'deg');
+
+  const isSuccess = state.devMode ? true : (Math.random() < (cp / 100));
+
+  let targetAngle;
+  if(isSuccess){
+    const lo = 2, hi = Math.max(successDeg - 2, lo + 0.5);
+    targetAngle = lo + Math.random() * (hi - lo);
+  } else {
+    const lo = successDeg + 2, hi = 358;
+    targetAngle = lo + Math.random() * Math.max(hi - lo, 0.5);
+  }
+
+  const turns = 3 + Math.floor(Math.random() * 3);
+  const totalAngle = turns * 360 + targetAngle;
+
+  status.textContent = 'Прокрут...';
+  status.style.color = 'var(--muted)';
+
+  const DURATION = 3500;
+  const startTime = performance.now();
+  needle.style.transform = 'rotate(0deg)';
+
+  function easeOutQuint(t){ return 1 - Math.pow(1 - t, 5); }
+  let lastTick = 0;
+
+  function frame(now){
+    const t = Math.min((now - startTime) / DURATION, 1);
+    const p = easeOutQuint(t);
+    const angle = totalAngle * p;
+    needle.style.transform = `rotate(${angle}deg)`;
+
+    if(now - lastTick > 35 + t * 220){
+      lastTick = now;
+      beep(520 + Math.random() * 260, .02);
+    }
+
+    if(t < 1){
+      requestAnimationFrame(frame);
+    } else {
+      needle.style.transform = `rotate(${totalAngle}deg)`;
+      finishUpgrade(isSuccess, idx, cp, status);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+function finishUpgrade(isSuccess, idx, chancePercent, status){
+  try{
+    if(isSuccess){
+      const currentRank = POOL_RANK[selectedForUpgrade.rarityKey];
+      const higher = POOL_SORTED_BY_WEIGHT.filter(r => POOL_RANK[r.key] > currentRank);
+      const nextRanked = higher[0] || POOL_SORTED_BY_WEIGHT[POOL_SORTED_BY_WEIGHT.length - 1];
+
+      const newItem = {
+        id: Date.now() + Math.random(),
+        rarityKey: nextRanked.key,
+        rarityName: nextRanked.name,
+        color: nextRanked.color,
+        name: nextRanked.name + (nextRanked.isFigure ? ' (фигура)' : ' предмет'),
+        img: nextRanked.img,
+        isFigure: !!nextRanked.isFigure,
+        tierKey: nextRanked.tierKey || null,
+        basePrice: nextRanked.basePrice || priceOfKey(nextRanked.key)
+      };
+      state.inventory.splice(idx, 1, newItem);
+      selectedForUpgrade = newItem;
+      status.textContent = 'УСПЕХ: ' + newItem.name;
+      status.style.color = 'var(--green)';
+      toast('Апгрейд успешен: ' + newItem.name,
+        newItem.isFigure ? 'fig' : (newItem.rarityKey === 'legendary' ? 'gold' : undefined));
+      if(newItem.isFigure){
+        confetti(); beep(1000, .2); beep(1500, .2);
+        const flash = $('#flash'); flash.classList.add('on');
+        setTimeout(() => flash.classList.remove('on'), 500);
+      } else if(newItem.rarityKey === 'legendary'){
+        confetti(); beep(1000, .2);
+        const flash = $('#flash'); flash.classList.add('on');
+        setTimeout(() => flash.classList.remove('on'), 400);
+      }
+    } else {
+      state.inventory.splice(idx, 1);
+      selectedForUpgrade = null;
+      status.textContent = 'ПРОВАЛ: предмет потерян';
+      status.style.color = 'var(--red)';
+      toast('Апгрейд не удался — предмет потерян');
+      beep(180, .25);
+    }
+    updateUI();
+  } catch(err){
+    console.error('finishUpgrade:', err);
+    toast('Ошибка апгрейда: ' + err.message);
+  } finally {
+    upAnimating = false;
+  }
+}
+
+$$('[data-up]').forEach(btn=>{
+  btn.addEventListener('click', () => runUpgrade(+btn.dataset.up));
+});
+
+$('#customUpBtn').addEventListener('click', ()=>{
+  const v = parseInt($('#customChance').value, 10);
+  if(!isFinite(v) || v < 1 || v > 99){ toast('Введи число от 1 до 99'); return; }
+  runUpgrade(v);
+});
+
+/* ================= БОНУС ================= */
+$('#bonusBtn').addEventListener('click', ()=>{
+  if(state.devMode){ toast('DEV: бонус не требуется', 'dev'); return; }
+  const day = 86400000, now = Date.now();
+  if(now - state.lastBonus < day){
+    toast('Бонус уже получен. Осталось ~'+Math.ceil((day-(now-state.lastBonus))/3600000)+' ч.');
+    return;
+  }
+  const bonus = 100 + state.level*50;
+  state.balance += bonus; state.lastBonus = now;
+  updateUI(); toast('Бонус получен: '+bonus); beep(660,.12);
+});
+
+/* ================= СБРОС ================= */
+$('#resetBtn').addEventListener('click', ()=>{
+  storage.remove(storage.KEY);
+  state.balance = 1000;
+  state.inventory = [];
+  state.opened = 0;
+  state.spent = 0;
+  state.best = null;
+  state.xp = 0;
+  state.level = 1;
+  state.lastBonus = 0;
+  state.devMode = false;
+  setDevStatus('devMode: OFF');
+  toast('Прогресс сброшен', 'dev');
+  updateUI();
+});
+
+/* ================= НАВИГАЦИЯ ================= */
+$$('nav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    $$('nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    $$('section').forEach(s=>s.classList.remove('active'));
+    const target = document.getElementById(btn.dataset.tab);
+    if(target) target.classList.add('active');
+    if(btn.dataset.tab === 'developer'){
+      setDevStatus(state.devMode ? 'devMode: ON' : 'devMode: OFF');
+    }
+  });
+});
+
+/* ================= UI ================= */
+function updateUI(){
+  $('#balance').textContent = formatBalance(state.balance);
+  $('#sOpened').textContent = state.opened;
+  $('#sSpent').textContent = state.spent;
+  $('#sBest').textContent = state.best ? state.best.name : '—';
+  $('#pXp').textContent = state.xp;
+  $('#pLevel').textContent = state.level;
+  renderInventory();
+  try { save(); } catch(e) { console.warn('updateUI save:', e); }
+}
+updateUI();
+</script>
+</body>
+</html>
